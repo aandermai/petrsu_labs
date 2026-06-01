@@ -1,0 +1,124 @@
+.main {
+    padding: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    box-sizing: border-box;
+}
+
+.banner {
+    border: 2px black solid;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box; /* Учитываем внутренние отступы */
+}
+
+.banner div {
+    display: inline-block;
+}
+
+.img_temp {
+    float: left;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    background: grey;
+    border: 2px black solid;
+}
+
+.banner_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.banner_text p {
+    line-height: 10px;
+}
+
+.navigation {
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px black solid;
+    box-sizing: border-box;
+
+}
+.navigation div{
+    width:90px;
+    padding: 10px;
+    margin: 5px;
+    display:inline-block;
+    border:2px solid black;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.text {
+    margin-top: 10px;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.text {
+    margin-top: 10px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    height: 100vh;
+}
+
+.menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px black solid;
+    padding: 20px;
+    width: 19%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.menu p {
+    font-size: 27px;
+    line-height: 5px;
+}
+
+.menu a {
+    font-size: 27px;
+    line-height: 50px;
+}
+
+
+.list {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 2px black solid;
+    padding: 20px;
+    width: 80%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.list div {
+    border: 2px black solid;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.list p {
+    line-height: 5px;
+}
+
+.copyright {
+    padding: 10px;
+    margin-top: 20px;
+    border: 2px black solid;
+    overflow: hidden;
+}
+.copyright a {
+    float: right;
+}

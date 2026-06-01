@@ -1,0 +1,23 @@
+table {
+    border: 2px solid black;
+}
+
+th {
+    border: 2px solid black;
+}
+
+td {
+    text-align: center;
+    border: 2px solid black;
+}
+
+.solution {
+    text-align: left;
+    width: 700px;
+}
+
+.table-from-15-task {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}

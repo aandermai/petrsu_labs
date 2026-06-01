@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>2048</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #333333;
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      background-color: violet;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+    button {
+      margin-top: 20px;
+      width: 200px;
+      height: 50px;
+      border: 5px violet solid;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: aliceblue;
+    }
+    .timer {
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: aliceblue;
+    }
+    .game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 1);
+      color: white;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 32px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer" id="timer">Время: 0 сек</div>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div class="game-over" id="gameOver">Игра Окончена! Ваше время: <span id="finalTime"></span></div>
+  <div class="game-over" id="gameWin">Вы выиграли! Ваше время: <span id="winTime"></span></div>
+  <button id="restartButton" onclick="RestartGame()">Начать заново</button>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas'); 
+    const context = canvas.getContext('2d'); 
+    const timerElement = document.getElementById('timer'); // Таймер
+    const gameOverElement = document.getElementById('gameOver'); // Сообщение об окончании игры
+    const finalTimeElement = document.getElementById('finalTime'); // Время окончания игры
+    const gameWinElement = document.getElementById('gameWin'); // Сообщение о победе
+    const winTimeElement = document.getElementById('winTime'); // Время победы
+    const restartButtonElement = document.getElementById('restartButton') // Кнопка перезапуска игры
+    const fieldSize = 4; // Размер поля (4x4)
+    const cellSize = canvas.width / fieldSize; // Размер клетки
+    const cellColors = {
+      0: '#F4ECF7', 2: '#E8DAEF', 4: '#D2B4DE', 8: '#BB8FCE',
+      16: '#A569BD', 32: '#8E44AD', 64: '#7D3C98', 128: '#6C3483',
+      256: '#5B2C6F', 512: '#4A235A', 1024: '#3D1F47', 2048: '#2E1538'
+    }; // Цвет клеток, где 0 - клетка поля
+
+    let board = Array.from({ length: fieldSize }, () => Array(fieldSize).fill(0)); // Создаём пустое игровое поле, заполненное нулями
+    let startTime = Date.now(); // Время начала игры
+    let timerInterval; 
+    let gameEnded = false;
+
+    // Перезапуск игры
+    function RestartGame() {
+      board = Array.from({ length: fieldSize }, () => Array(fieldSize).fill(0)); // Сбрасываем игровое поле
+      startTime = Date.now(); // Сбрасываем время начала игры
+      gameEnded = false; // Сбрасываем флаг окончания игры
+      gameOverElement.style.display = 'none'; // Скрываем сообщение об окончании игры
+      gameWinElement.style.display = 'none'; // Скрываем сообщение о победе
+      clearInterval(timerInterval); // Останавливаем предыдущий таймер
+      timerInterval = setInterval(UpdateTimer, 1000); // Запускаем новый таймер
+      SpawnTile(); // Добавляем начальные плитки
+      SpawnTile(); 
+      DrawBoard(); // Перерисовываем игровое поле
+    }
+
+    // Показ прошедшего времени
+    function UpdateTimer() {
+      if (!gameEnded) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000); // Время в секундах
+        timerElement.textContent = `Время: ${elapsed} сек`;
+      }
+    }
+
+    // Показ времени окончания
+    function StopTimer() {
+      clearInterval(timerInterval); // Останавливаем интервал таймера
+      const elapsed = Math.floor((Date.now() - startTime) / 1000); // Время в секундах
+      finalTimeElement.textContent = `${elapsed} сек`;
+      winTimeElement.textContent = `${elapsed} сек`;
+    }
+
+    timerInterval = setInterval(UpdateTimer, 1000); // Установка обновления таймера каждую секунду
+
+    // Рисование игрового поля
+    function DrawBoard() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      for (let row = 0; row < fieldSize; row++) {
+        for (let col = 0; col < fieldSize; col++) {
+          DrawCell(row, col, board[row][col]);
+        }
+      }
+    }
+
+    // Рисование клетки с числом
+    function DrawCell(row, col, value) {
+      const x = col * cellSize;
+      const y = row * cellSize;
+      context.fillStyle = cellColors[value] || '#3c3a32';
+      context.fillRect(x + 5, y + 5, cellSize - 10, cellSize - 10);
+
+      if (value) {
+        context.fillStyle = value > 4 ? '#f9f6f2' : '#776e65';
+        context.font = `${cellSize / 3}px Arial`;
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(value, x + cellSize / 2, y + cellSize / 2);
+      }
+    }
+
+    // Добавление клетки на поле случайным образом 
+    function SpawnTile() {
+      let emptyCells = [];
+      for (let row = 0; row < fieldSize; row++) {
+        for (let col = 0; col < fieldSize; col++) {
+          if (board[row][col] === 0) emptyCells.push([row, col]);
+        }
+      }
+
+      if (emptyCells.length > 0) {
+        const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        board[row][col] = Math.random() < 0.9 ? 2 : 4;
+      }
+    }
+
+    // Передвижение клеток
+    function Slide(row) {
+      const filteredRow = row.filter(val => val);
+      const zeros = Array(fieldSize - filteredRow.length).fill(0);
+      return [...filteredRow, ...zeros];
+    }
+
+    // Объединение клеток
+    function Combine(row) {
+      for (let i = 0; i < fieldSize - 1; i++) {
+        if (row[i] && row[i] === row[i + 1]) {
+          row[i] *= 2;
+          row[i + 1] = 0;
+        }
+      }
+      return row;
+    }
+
+    // Перемещение клеток влево
+    function MoveLeft() {
+      for (let row = 0; row < fieldSize; row++) { 
+        board[row] = Slide(Combine(Slide(board[row]))); 
+      }
+    }
+
+    // Поворот игрового поля
+    function RotateBoard() {
+      const newBoard = Array.from({ length: fieldSize }, () => Array(fieldSize).fill(0));
+      for (let row = 0; row < fieldSize; row++) {
+        for (let col = 0; col < fieldSize; col++) {
+          newBoard[col][fieldSize - 1 - row] = board[row][col];
+        }
+      }
+      board = newBoard;
+    }
+
+    // Проверка на то, может ли игрок сделать ход
+    function IsGameOver() {
+      for (let row = 0; row < fieldSize; row++) {
+        for (let col = 0; col < fieldSize; col++) {
+          if (board[row][col] === 0) return false;
+          if (col < fieldSize - 1 && board[row][col] === board[row][col + 1]) return false;
+          if (row < fieldSize - 1 && board[row][col] === board[row + 1][col]) return false;
+        }
+      }
+      return true;
+    }
+
+    // Проверка достижения клетки со значением 2048
+    function CheckWin() {
+      for (let row = 0; row < fieldSize; row++) {
+        for (let col = 0; col < fieldSize; col++) {
+          if (board[row][col] === 2048) return true;
+        }
+      }
+      return false;
+    }
+
+    function Move(direction) {
+      if (gameEnded) return;
+
+      switch (direction) {
+        case 'left':
+          MoveLeft();
+          break;
+        case 'right':
+          RotateBoard();
+          RotateBoard();
+          MoveLeft();
+          RotateBoard();
+          RotateBoard();
+          break;
+        case 'up':
+          RotateBoard();
+          RotateBoard();
+          RotateBoard();
+          MoveLeft();
+          RotateBoard();
+          break;
+        case 'down':
+          RotateBoard();
+          MoveLeft();
+          RotateBoard();
+          RotateBoard();
+          RotateBoard();
+          break;
+      }
+      SpawnTile();
+      DrawBoard();
+
+      if (CheckWin()) {
+        gameEnded = true;
+        StopTimer();
+        gameWinElement.style.display = 'block';
+      } else if (IsGameOver()) {
+        gameEnded = true;
+        StopTimer();
+        gameOverElement.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          Move('left');
+          break;
+        case 'ArrowRight':
+          Move('right');
+          break;
+        case 'ArrowUp':
+          Move('up');
+          break;
+        case 'ArrowDown':
+          Move('down');
+          break;
+      }
+    });
+
+    SpawnTile();
+    SpawnTile();
+    DrawBoard();
+  </script>
+</body>
+</html>

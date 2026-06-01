@@ -1,0 +1,31 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+    .question h3 {
+        margin-bottom: 10px;
+    }
+
+    .question input,
+    .question select {
+        margin: 5px 0;
+    }
+
+.button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #10e090;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .button:hover {
+        background-color: #13c977;
+    }

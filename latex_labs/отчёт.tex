@@ -1,0 +1,120 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{pdfpages}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1,T2A]{fontenc}
+\usepackage{float}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[left=20mm, top=15mm, right=15mm,bottom=15mm,nohead,footskip=10mm]{geometry}
+\usepackage{indentfirst}
+\renewcommand{\baselinestretch}{1}
+
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+
+\renewcommand{\baselinestretch}{1}
+{\large
+{\sc Министерство образования и науки Российской Федерации\\
+ФГБОУ ВО <<Петрозаводский государственный университет>>\\
+Институт математики и информационных технологий\\
+Кафедра информатики и математического обеспечения
+}
+}
+
+\end{center}
+
+\vfill
+
+\begin{center}
+{\normalsize Отчет по учебной практике\\(компьютерные технологии в математике) } \\
+
+%\bigskip
+%	{\Large \sc Анализ производительности беспроводной сети 802.11} \\
+\end{center}
+\bigskip
+
+\begin{flushright}
+
+  \parbox{8cm} {
+
+    \renewcommand{\baselinestretch}{1}
+
+    \normalsize
+
+    Выполнил:\\Петрушин А.~А. группа\ 22103 \\
+%\begin{flushright}
+%\vspace{5mm}
+    \rule{55mm}{.3pt}\\
+\mbox{\ \ \ \qqu}{\it подпись}\\
+%\end{flushright}
+
+Руководитель практики:\\
+Е. И. Рыбин\\
+%Оценка руководителя:\\ \hfill \rule{35mm}{.3pt}\\
+%\begin{flushright}
+%\vspace{5mm}
+\rule{55mm}{.3pt}\\
+\mbox{\ \ \ \qqu}{\it подпись}\\
+%\end{flushright}
+
+Итоговая оценка:\\
+%\begin{flushright}
+%<<\rule{10mm}{.3pt}>> \rule{35mm}{.3pt} 2022 г.\\
+%\end{flushright}
+%\begin{flushright}
+%\vspace{5mm}
+\rule{55mm}{.3pt}\\
+\mbox{\ \ \ \qqu}{\it оценка}\hfill\\
+%\end{flushright}
+
+}
+ 
+\end{flushright}
+
+\vfill
+
+\begin{center}
+\large Петрозаводск -- 2024
+\end{center}
+\newpage
+\tableofcontents
+\newpage
+\section{Описание работы}
+ Первое задание учебной практики заключалось в том, что мы должны транслировать файл <<first-example.tex>> и получить документ в форматах dvi, postscript и pdf. Чтобы проделать данную работу мы ввели несколько команд в терминале, а именно: <<pdflatex first-example.tex>> для получения pdf-файла, <<latex first-example.tex>> для dvi-файла и <<dvips first-example.dvi>> для postscript-файла.
+
+Вторая задание требовало подготовить документ, содержащий математический текст, который мы берём из 1 или 2 тома <<Краткого курса математического анализа>> Л. Д. Кудрявцева. Мне были предоставлены страницы с 178 до 180 из второго тома. Пользуясь пособиями, предоставленными на сайте кафедры Информатики и Математического Обеспечения ПетрГУ, я изучил синтаксис языка latex и сделал документ, который содержит предоставленный текст.
+
+Последнее третье задание запрашивало построить изображение какой-либо функции в декартовых координатах с помощью интерпретатора gnuplot и разместить его в документе задания 2. Я ознакомился со скринкастами на сайте и сделал изображение графика функции:
+$$x^2-y^2 $$
+Данное изображение было сделано с помощью ряда таких команд и вставлено в конец документа:
+
+1) set term pdfcairo
+
+2) set output 'surface.pdf'
+
+3) set ztics 50
+
+4) set cbtics 50
+
+5) splot x**2-y**2 t'Гиперболический парабалоид'w pm3d
+
+\newpage
+\section{Результаты работы}
+\subsection{Задание 2}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{2lab.png}
+\caption{Код/Результат второго задания}
+\end{figure}
+\subsection{Задание 3}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{surface.png}
+    \caption{График функции $x^2 - y^2$}
+\end{figure}
+
+\end{document}

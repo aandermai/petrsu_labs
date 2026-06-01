@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Красная Шапочка</title>
+        <style>
+            body  {
+                background-image: url("./images/fon.jpg");
+                background-repeat: repeat;
+                background-position: center;
+            }
+            table { /* Таблица с продуктами */
+                border: 1px solid blue;
+                width: 50%;
+                margin-top: 25px;
+                margin-bottom: 15px;
+            }
+            th, td {
+                border: 1px solid blue;
+            }
+            p {
+                color:royalblue;
+                margin-top: 5px;
+                word-spacing: 7px;
+            }
+            .content { /* Блок с содержанием */
+                width: 120px;
+                margin-left: 0;
+                margin-right: -120px;
+                line-height: 30px;
+
+            }
+            .content_list { /* Главы в содержании */
+                list-style-type: none;
+                padding-left: 0;
+                position: relative;
+                }
+            .text { /* Блок со сказкой */
+                width: 1255px;
+                margin-left: 200px;
+            }
+            .mix { /* Блок содержания + блок со сказкой */
+                display: flex;
+                background-image: url("./images/fon-line.gif");
+                background-repeat: repeat-y;
+                background-position: 10% 75%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2 style="text-align: center; line-height: 5px; font-size: 20px; color: deeppink">Шарль Перро</h2>
+        <h1 style="text-align: center; line-height: 20px; font-size: 30px; color: deeppink">КРАСНАЯ ШАПОЧКА</h1>
+        <hr> <!--Колонтитул под названием сказки-->
+
+        <div class="mix"> <!--Текст и колонка с содержанием-->
+            <nav class="content"> <!--Содержание-->          
+                <h4 style="color:deeppink; font-size: 18px">Содержание</h4>
+                <ul class="content_list">
+                    <li style="line-height: 20px; margin-top: 20px; color: rebeccapurple"><a href="#introduction" style="text-decoration: none;">Введение</a></li>
+                    <li style="line-height: 20px; margin-top: 20px; color: rebeccapurple"><a href="#meet" style="text-decoration: none;">Шапочка встречает волка</a></li>
+                    <li style="line-height: 20px; margin-top: 20px; color: rebeccapurple"><a href="#plan" style="text-decoration: none;">Коварный план волка</a></li>
+                    <li style="line-height: 20px; margin-top: 20px; color: rebeccapurple;"><a href="#new_grandma" style="text-decoration: none">Красная Шапочка и волк в доме бабушки</a></li>
+                    <li style="line-height: 20px; margin-top: 20px; color: rebeccapurple"><a href="#happy_end" style="text-decoration: none">Счастливый конец</a></li>
+                </ul>
+            </nav>
+            <div class="text"> <!--Текст-->
+                <img src="./images/pic1.jpg" alt="Мама передаёт пирожки Красной Шапочке" style="float: left; margin-left: 0px; margin-right: 15px">
+                <p id="introduction"><b style="font-size: 40px">Ж</b>ила однажды в далекой деревушке маленькая прелестная девочка. Ее мать и
+                бабушка любили ее без памяти.<br>
+                Бабушка сшила ей красную шапочку, которая
+                была ей так к лицу, что все и стали звать девочку <b>Красной Шапочкой</b>.<br></p>
+                <p>Однажды мама напекла целый противень пирогов и говорит дочке:<br></p>
+                <p>- <i><b>Красная Шапочка</b>, бабушка заболела. Не отнесешь ли ты ей пирожков и
+                горшочек свежевзбитого масла, как<br> это указано в приведеной ниже табличке?</i></p><br>
+                
+            
+                <table align="center"> <!--Таблица с продуктами-->
+                    <caption style="color:darkblue"><b>Меню</b></caption>
+                    <thead style="background-color:mistyrose">
+                        <tr>
+                            <th>№</th>
+                            <th>Продукт</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        <tr>
+                            <td>1</td>
+                            <td style="text-align: left;">Пирожки с картошкой</td>
+                            <td>10 шт.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td style="text-align: left;">Пирожки с капустой</td>
+                            <td>10 шт.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td style="text-align: left">Свежевзбитое масло</td>
+                            <td>1 горшочек</td>
+                        </tr>
+                    </tbody>
+                </table><br>
+
+                <p><b>Красная Шапочка</b> тут же встала и отправилась к бабушке. А бабушка ее жила
+                в другой деревне, за густым, диким<br> лесом.</p>
+                
+                <p id="meet">Проходя через лес, она встретила волка. Волк хотел было ее съесть, но
+                побоялся, поскольку недалеко работали дровосеки. Поэтому он придумал план.</p>
+                <p>- <i>Куда ты идешь, моя крошка?</i> - спросил волк.<br>
+                -<i> Повидать свою бабушку</i>, - сказала <b>Красная Шапочка</b>. - <i>У меня есть для
+                нее горшочек свежевзбитого масла и пирожки</i>.<br>
+                -<i> И далеко тебе идти?</i> - спросил волк.<br>
+                -<i> Далеко</i>, - ответила <b>Красная Шапочка</b>. -<i> Ее дом довольно далеко отсюда,
+                первый с той стороны леса</i>.<br>
+                -<i> Я тоже хочу навестить бабушку</i>, - сказал хитрый волк. -<i> Я пойду этой
+                тропинкой, а ты другой. Посмотрим, кто из нас первый доберется туда.</i><br>
+                
+                <img src="./images/pic2.jpg" alt="Волк бежит к бабушке" style="float:right">
+                <p id="plan">Волк бросился бежать изо всех сил по самой короткой тропинке, а Красная Шапочка
+                пошла по самой длинной дорожке.<br> Она собирала цветы, пела веселые песни,
+                играла с красивыми бабочками. Волк тем временем добежал до бабушкиного дома.<br> Он дважды постучал в дверь.</p><br>
+                <p>-<i> Кто там?</i> - спросила Бабушка.<br>
+                -<i> Это я,<b> Красная Шапочка</b></i>, - сказал волк голосом девочки. - <i>Я принесла
+                тебе пирожков и горшочек свежевзбитого масла.</i></p>
+                
+                <p>Бабушка лежала в постели, потому что болела.</p>
+                <p>- Открой дверь и войди, - крикнула она.</p>
+                <img src="./images/pic3.jpg" alt="Бабушка лежит в кровати" style="float:left; margin-right: 15px;">
+                <p id="new_grandma">Волк ворвался в комнату. Он не ел целых три дня и был поэтому очень<br>
+                голоден. Он тотчас проглотил Бабушку. Потом он натянул на себя бабушкин
+                халат, забрался на постель и стал<br> поджидать <b>Красную Шапочку</b>, которая через
+                некоторое время пришла и постучалась в дверь.</p><br>
+                <p>- Кто там? - спросил Волк бабушкиным голосом. Его голос был хриплым, но
+                Красная Шапочка подумала, что у<br> Бабушки болит горло.
+                -<i> Это я, <b>Красная Шапочка</b></i>, - сказала она. -<i> Я принесла тебе пирожков и
+                горшочек свежевзбитого масла.</i><br>
+                -<i> Открой дверь и войди,</i> - сказал волк таким ласковым голосом, насколько
+                мог.</p><br>
+                <img src="./images/pic4.jpg" alt="Волк переоделся в бабушку" style="float:right">
+                <p>Он натянул одеяло до самых глаз.</p><br>
+                <p><i>- Поставь свою корзинку на стол и подойди ко мне,</i> - сказал волк.</p><br>
+                <p><b>Красная Шапочка</b> подошла поближе. Она сказала:</p><br>
+                <p>-<i> Бабушка, какие у вас длинные руки!</i><br>
+                -<i> Это чтобы получше обнимать тебя, моя дорогая,</i> - сказал волк.</p><br>
+                <p><i>- Бабушка, какие у вас длинные уши!</i><br>
+                <i>- Это чтобы лучше слышать тебя, моя дорогая.</i></p><br>
+                
+                <img src="./images/pic5.jpg" alt="Дровосеки" style="float:left; margin-right: 15px;">
+                <p><i>- Бабушка, какие у вас большие глаза!</i><br>
+                -<i> Это чтобы получше видеть тебя, моя дорогая.</i></p><br>
+                <p><i>- Бабушка, какие у вас большие зубы!</i><br>
+                <i>- Это чтобы съесть тебя!</i> - сказал волк и проглотил <b>Красную Шапочку.</b></p><br>
+                <p id="happy_end">Он так громко зарычал своим жутким волчьим голосом, что дровосеки
+                услышали его. Они вбежали в дом с топорами. Они размахнулись своими
+                топорами и убили волка. Из волчьего живота тотчас вылезли Бабушка с Красной
+                Шапочкой, живые и здоровые. Они зарыли волка в лесу и пригласили дровосеков
+                на чай. К чаю были поданы вкусные пирожки со свежевзбитым маслом.</p>
+                
+                <p style="float:right"><a href="#introduction" style="text-decoration: none;">На начало</a></p>
+            </div>
+        </div>
+    </body>
+</html>
+    

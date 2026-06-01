@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Загрузка файлов</title>
+        <style>
+            input {
+                    position: relative;
+                    display: flex;
+                    margin-bottom: 20px;
+            }
+        </style> 
+    </head>
+    <body>
+        Выберите файлы для загрузки
+        <form action="file_downloader.php" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" multiple>
+            <input type="submit" value="Вывести">
+        </form>
+    </body>
+</html>

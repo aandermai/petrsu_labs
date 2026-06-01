@@ -1,0 +1,300 @@
+#include <stdlib.h>
+#include "GLUT/include/GL/glut.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "C:\Users\Артём\Desktop\Компьютерная графика\stb_image.h"
+#include <cstdlib>
+#include <cmath>
+
+// Текстуры
+GLuint grassTexture, wallsTexture, backTexture, ballTexture, wallTexture;
+
+// Загрузка текстуры
+GLuint loadTexture(const char* filename) {
+    int width, height, channels;
+    unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
+    if (!data) {
+        printf("Ошибка загрузки текстуры: %s\n", filename);
+        exit(1);
+    }
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, channels == 4 ? GL_RGBA : GL_RGB,
+        width, height, 0, channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+    return texture;
+}
+
+// Загрузка текстур
+void initTextures() {
+    grassTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/floor.jpg");
+    wallsTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/wall.jpg");
+    backTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/backwall.jpg");
+    ballTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/ball.png");
+    wallTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/ceiling.jpg");
+}
+
+// Отрисовка пола
+void drawFloor() {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, grassTexture);
+    glBegin(GL_QUADS);
+    glNormal3f(0, 1, 0);  // Нормаль вверх
+    glTexCoord2f(0, 0); glVertex3f(-4, -2, -4);
+    glTexCoord2f(1, 0); glVertex3f(4, -2, -4);
+    glTexCoord2f(1, 1); glVertex3f(4, -2, 4);
+    glTexCoord2f(0, 1); glVertex3f(-4, -2, 4);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+// Отрисовка мяча с нормалями и трансляцией
+void drawBall() {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, ballTexture);
+
+    const int stacks = 10;
+    const int slices = 10;
+    const float radius = 1.5;
+
+    // Поворот мяча или его позиция относительно источника света
+    glPushMatrix();
+    glTranslatef(-1.5, 0.0, 0.0);  // Перемещаем мяч влево
+    glRotatef(30.0f, 1.0f, 0.0f, 0.0f); // Поворот мяча, чтобы он был виден под другим углом
+
+    for (int i = 0; i < stacks; ++i) {
+        float phi1 = (i * 3.1415) / stacks;
+        float phi2 = ((i + 1) * 3.1415) / stacks;
+
+        glBegin(GL_QUAD_STRIP);
+        for (int j = 0; j <= slices; ++j) {
+            float theta = (j * 2.0f * 3.1415) / slices;
+            float cosTheta = cos(theta);
+            float sinTheta = sin(theta);
+
+            float x1 = radius * sin(phi1) * cosTheta;
+            float y1 = radius * cos(phi1);
+            float z1 = radius * sin(phi1) * sinTheta;
+            float x2 = radius * sin(phi2) * cosTheta;
+            float y2 = radius * cos(phi2);
+            float z2 = radius * sin(phi2) * sinTheta;
+
+            // Нормали для каждой вершины
+            glNormal3f(x1 / radius, y1 / radius, z1 / radius);
+            glTexCoord2f((float)j / slices, (float)i / stacks); glVertex3f(x1, y1, z1);
+            glNormal3f(x2 / radius, y2 / radius, z2 / radius);
+            glTexCoord2f((float)j / slices, (float)(i + 1) / stacks); glVertex3f(x2, y2, z2);
+        }
+        glEnd();
+    }
+
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+}
+
+
+
+// Отрисовка параллелепипеда
+void drawWall() {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+
+    glPushMatrix();
+
+    // Поворот параллелепипеда
+    glRotatef(30.0f, 0.0f, 1.0f, 0.0f); // Поворот на 30 градусов вокруг оси Y
+
+    glTranslatef(2.5, 0.0, -1.0);
+    glScalef(2.0, 3.5, 1.5);
+
+    // Отрисовка всех граней параллелепипеда
+    glBegin(GL_QUADS);
+
+    // Передняя грань
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, 0.5f);
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, 0.5f);
+    glNormal3f(0, 0, 1);
+
+    // Задняя грань
+    glNormal3f(0, 0, -1);
+    glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+    glNormal3f(0, 0, -1);
+    glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+    glNormal3f(0, 0, -1);
+    glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+    glNormal3f(0, 0, -1);
+    glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+
+    // Левые и правые грани
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(1, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(1, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, 0.5f);
+
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(0, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(0, 1); glVertex3f(0.5f, 0.5f, 0.5f);
+
+    // Верхняя и нижняя грань
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(0, 0); glVertex3f(-0.5f, 0.5f, 0.5f);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(1, 0); glVertex3f(0.5f, 0.5f, 0.5f);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(1, 1); glVertex3f(0.5f, -0.5f, -0.5f);
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(0, 1); glVertex3f(-0.5f, -0.5f, -0.5f);
+
+    glEnd();
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+}
+
+
+// Отрисовка неба
+void drawWalls() {
+    glEnable(GL_TEXTURE_2D);
+
+
+    // Задняя стена
+    glPushMatrix();  // Сохраняем текущую матрицу трансформации
+    glBindTexture(GL_TEXTURE_2D, backTexture);
+
+    glRotatef(180.0f, 0.0f, 0.0f, 1.0f);  // Поворот на 180 градусов по оси Y
+
+    glTranslatef(0.0f, -2.0f, 0.0f);  // Сдвиг по оси Y на 2 единицы вверх
+
+    glBegin(GL_QUADS);
+    glNormal3f(0, 0, 1);  // Нормаль вперед
+    glTexCoord2f(0, 0); glVertex3f(-4, -2, -4);
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(1, 0); glVertex3f(4, -2, -4);
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(1, 1); glVertex3f(4, 4, -4);
+    glNormal3f(0, 0, 1);
+    glTexCoord2f(0, 1); glVertex3f(-4, 4, -4);
+    glEnd();
+
+    glPopMatrix();  // Восстанавливаем матрицу после поворота
+
+    // Левая стена
+    glBindTexture(GL_TEXTURE_2D, wallsTexture);
+    glBegin(GL_QUADS);
+    glNormal3f(1, 0, 0);  // Нормаль вправо
+    glTexCoord2f(0, 0); glVertex3f(-4, -2, -4);
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(1, 0); glVertex3f(-4, -2, 4);
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(1, 1); glVertex3f(-4, 4, 4);
+    glNormal3f(1, 0, 0);
+    glTexCoord2f(0, 1); glVertex3f(-4, 4, -4);
+    glEnd();
+
+    // Правая стена
+    glBegin(GL_QUADS);
+    glNormal3f(-1, 0, 0);  // Нормаль влево
+    glTexCoord2f(0, 0); glVertex3f(4, -2, -4);
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(1, 0); glVertex3f(4, -2, 4);
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(1, 1); glVertex3f(4, 4, 4);
+    glNormal3f(-1, 0, 0);
+    glTexCoord2f(0, 1); glVertex3f(4, 4, -4);
+    glEnd();
+
+    // Верх
+    glBindTexture(GL_TEXTURE_2D, wallsTexture);
+    glBegin(GL_QUADS);
+    glNormal3f(0, -1, 0);  // Нормаль вниз
+    glTexCoord2f(0, 0); glVertex3f(-4, 4, -4);
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(1, 0); glVertex3f(4, 4, -4);
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(1, 1); glVertex3f(4, 4, 4);
+    glNormal3f(0, -1, 0);
+    glTexCoord2f(0, 1); glVertex3f(-4, 4, 4);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(0.0, 2.0, 10.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0);  // Камера пониже и немного выше
+
+    GLfloat lightPos[] = { 0.0f, 0.5f, 4.0f, 1.0f };
+    GLfloat lightAmbient[] = { 0.9f, 0.9f, 0.9f, 1.0f };  // Яркость света
+    GLfloat lightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };  // Яркость света
+
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+
+    GLfloat materialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, materialDiffuse);
+
+    drawFloor();
+    drawWalls();
+    drawBall();
+    drawWall();
+
+    glutSwapBuffers();
+}
+
+void init() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+
+    glClearColor(0.2f, 0.2f, 0.4f, 1.0f);  // Более яркий фон
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 800.0 / 600.0, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    initTextures();
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("Натюрморт");
+
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}

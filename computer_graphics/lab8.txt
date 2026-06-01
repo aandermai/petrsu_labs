@@ -1,0 +1,238 @@
+#include <stdlib.h>
+#include "GLUT/include/GL/glut.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "C:\\Users\\Артём\\Desktop\\Компьютерная графика\\stb_image.h"
+#include <math.h>
+
+// Структуры для углов стрелок
+float hourAngle = 0.0f;
+float minuteAngle = 0.0f;
+float secondAngle = 0.0f;
+GLuint clockTexture, backgroundTexture;
+float speedMultiplier = 1.0f;
+
+// Время, с которого начинаем (можно изменить)
+int hours = 12;
+int minutes = 0;
+float seconds = 0.0f;
+
+// Переменные для управления временем
+int lastTime = 0;  // Время последнего обновления времени в миллисекундах
+int currentTime = 0;  // Текущее время
+
+GLuint loadTexture(const char* filename) {
+    int width, height, channels;
+    unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
+    if (!data) {
+        printf("Error loading texture %s\n", filename);
+        return 0;
+    }
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, channels == 4 ? GL_RGBA : GL_RGB, width, height, 0,
+        channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+    return texture;
+}
+
+void initTextures() {
+    clockTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\clock.png");
+    backgroundTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\wall.jpg");
+}
+
+void drawBackground() {
+    glBindTexture(GL_TEXTURE_2D, backgroundTexture);  // Используем текстуру фона
+    glEnable(GL_TEXTURE_2D);  // Включаем текстуры
+
+    glBegin(GL_QUADS);  // Рисуем квадрат
+    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);  // Левый нижний угол
+    glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);   // Правый нижний угол
+    glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);    // Правый верхний угол
+    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);   // Левый верхний угол
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);  // Отключаем текстуры
+}
+
+void drawFrame(float radius) {
+    glColor3f(0.6f, 0.3f, 0.0f);
+    glLineWidth(20.0f);  // Ширина линии рамки
+
+    glBegin(GL_LINE_LOOP);  // Рисуем контур круга
+    int segments = 100;  // Количество сегментов для круга
+    for (int i = 0; i < segments; ++i) {
+        float angle = 2.0f * 3.14159265359f * i / segments;
+        float x = radius * cos(angle);
+        float y = radius * sin(angle);
+        glVertex2f(x, y);  // Координаты точек для круга
+    }
+    glEnd();
+}
+
+void drawCircle(float radius, int segments) {
+    glBindTexture(GL_TEXTURE_2D, clockTexture);  // Используем текстуру
+    glEnable(GL_TEXTURE_2D);  // Включаем текстуры
+
+    glBegin(GL_TRIANGLE_FAN);  // Используем TRIANGLE_FAN для рисования круга
+    glTexCoord2f(0.5f, 0.5f);  // Центр текстуры (если изображение центральное)
+    glVertex2f(0.0f, 0.0f);    // Центр круга
+
+    for (int i = 0; i <= segments; ++i) {
+        float angle = 2.0f * 3.14159265359f * i / segments;
+        float x = radius * cos(angle);
+        float y = radius * sin(angle);
+
+        // Координаты текстуры для правильного наложения
+        float u = 0.5f + 0.5f * cos(angle);
+        float v = 0.5f + 0.5f * sin(angle);
+        glTexCoord2f(u, v);  // Устанавливаем координаты текстуры
+        glVertex2f(x, y);    // Рисуем вершину круга
+    }
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);  // Отключаем текстуры
+}
+
+void drawArrow(float angle, float length) {
+    float xEnd = length * cos(angle);
+    float yEnd = length * sin(angle);
+    glLineWidth(5.0f);
+    glBegin(GL_LINES);
+    glVertex2f(0.0f, 0.0f);
+    glVertex2f(xEnd, yEnd);
+    glEnd();
+}
+
+void drawClockFace() {
+    drawBackground();  // Сначала рисуем фон
+    // Рисуем рамку
+    drawFrame(0.85f);  // Рисуем рамку с радиусом чуть больше, чем радиус циферблата
+    glColor3f(1.0f, 1.0f, 1.0f);  // Белый цвет циферблата
+    drawCircle(0.8f, 100);  // Рисуем круглый циферблат
+
+    glLineWidth(3.0f);
+
+    // Рисуем деления на циферблате
+    for (int i = 0; i < 12; ++i) {
+        float angle = 2.0f * 3.14159265359f * i / 12;
+        float xStart = 0.8f * cos(angle);
+        float yStart = 0.8f * sin(angle);
+        float xEnd = 0.7f * cos(angle);
+        float yEnd = 0.7f * sin(angle);
+
+        glColor3f(0.0f, 0.0f, 0.0f);  // Черный цвет делений
+        glBegin(GL_LINES);
+        glVertex2f(xStart, yStart);
+        glVertex2f(xEnd, yEnd);
+        glEnd();
+    }
+
+    // Рисуем точку в центре
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glPointSize(10.0f);
+    glBegin(GL_POINTS);
+    glVertex2f(0.0f, 0.0f);
+    glEnd();
+
+    // Рисуем стрелки
+    // Часовая стрелка
+    glColor3f(0.0f, 0.0f, 0.0f);
+    drawArrow(hourAngle, 0.45f);
+
+    // Минутная стрелка
+    glColor3f(0.0f, 0.0f, 0.0f);
+    drawArrow(minuteAngle, 0.65f);
+
+    // Секундная стрелка
+    glColor3f(1.0f, 0.0f, 0.0f);
+    drawArrow(secondAngle, 0.7f);
+}
+
+void updateAngles() {
+    // Углы стрелок с учётом дробной части
+    hourAngle = -(2.0f * 3.14159265359f * ((hours % 12) / 12.0f + minutes / 720.0f)) + 3.14159265359f / 2.0f;
+    minuteAngle = -(2.0f * 3.14159265359f * (minutes / 60.0f + seconds / 3600.0f)) + 3.14159265359f / 2.0f;
+    secondAngle = -(2.0f * 3.14159265359f * (seconds / 60.0f)) + 3.14159265359f / 2.0f;
+}
+
+void keyboardSpecial(int key, int x, int y) {
+    if (key == GLUT_KEY_RIGHT) {
+        speedMultiplier += 1.0f;  // Ускоряем движение стрелок
+    }
+    else if (key == GLUT_KEY_LEFT) {
+        speedMultiplier -= 1.0f;  // Замедляем движение стрелок
+        if (speedMultiplier < 0.1f) speedMultiplier = 0.1f;  // Минимальное значение скорости
+    }
+}
+
+void display() {
+    currentTime = glutGet(GLUT_ELAPSED_TIME);  // Получаем время в миллисекундах
+    float deltaTime = (currentTime - lastTime) / 1000.0f;
+    lastTime = currentTime;
+
+    seconds += deltaTime * speedMultiplier;
+
+    if (seconds >= 60) {
+        seconds -= 60;
+        minutes++;
+    }
+
+    if (minutes >= 60) {
+        minutes -= 60;
+        hours++;
+    }
+
+    updateAngles();  // Обновляем углы стрелок
+    glClear(GL_COLOR_BUFFER_BIT);  // Очищаем экран
+    drawClockFace();  // Рисуем часы
+
+    glutSwapBuffers();
+}
+
+void reshape(int w, int h) {
+    glViewport(0, 0, w, h);  // Устанавливаем новый размер окна
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    // Обновляем проекцию, чтобы сохранить правильное соотношение сторон
+    float aspect = (float)w / (float)h;
+    if (w <= h)
+        gluOrtho2D(-1.0f, 1.0f, -1.0f / aspect, 1.0f / aspect);
+    else
+        gluOrtho2D(-aspect, aspect, -1.0f, 1.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+void initOpenGL() {
+    glClearColor(0.8f, 0.8f, 1.0f, 1.0f);  // Устанавливаем цвет фона
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(800, 800);
+    glutCreateWindow("3D Clock");
+    initOpenGL();
+    initTextures();
+
+    glutDisplayFunc(display);
+    glutIdleFunc(display);
+    glutSpecialFunc(keyboardSpecial);  // Обработка специальных клавиш
+    glutReshapeFunc(reshape);  // Функция обработки изменения размера окна
+
+    glutMainLoop();
+
+    return 0;
+}

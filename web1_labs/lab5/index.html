@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>User's Form</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="main">
+        <div class="start">
+        <h1>Анкета для студентов ПетрГУ</h1>
+        <p>Данная анкета создана администрацией ПетрГУ с целью узнать сферы занятости студентов помимо учебной.</p>
+        </div>
+            <form action="" method="get" class="student-form">
+            <div class="student-form">
+                <label for="name">ФИО</label>
+                <input type="text" name="name" id="name" maxlength="75" placeholder="Иванов Иван Иванович" required/>
+                <div id="name-empty-error" class="error-message">Поле не должно быть пустым</div>
+            </div>
+            <div class="student-form">
+                <label for="phone">Номер телефона</label>
+                <div style="display: block;">
+                    <input type="tel" name="phone[]" id="phone" placeholder="+7 (xxx) xxx-xx-xx" />
+                    <div id="phone-empty-error" class="error-message">Поле не должно быть пустым</div>
+                    <button type="button" id="add-button" onclick="AddPhone()">+</button>
+                </div>
+                <div id="new-phone-container"></div>
+            </div>
+            <div class="student-form">
+                <label for="institute">Институт</label>
+                <input type="text" name="institute" id="institute" list="institute-list" placeholder="Выберите ваш институт" />
+                <div id="institute-empty-error" class="error-message">Поле не должно быть пустым</div>
+                <div id="institute-list-error" class="error-message">Выберите значение из списка</div>
+                <datalist id="institute-list">
+                    <option value="ИМИТ"></option>
+                    <option value="ФТИ"></option>
+                    <option value="МедИн"></option>
+                    <option value="ИПП"></option>
+                    <option value="ИФКСиТ"></option>
+                    <option value="ИЛГиСН"></option>
+                    <option value="ИИПиСН"></option>
+                    <option value="ИИЯ"></option>
+                    <option value="ИФ"></option>
+                    <option value="ИБЭАТ"></option>
+                    <option value="ИЭП"></option>
+                </datalist>
+            </div>
+            <div class="student-form">
+                <label for="course">Курс</label>
+                <input type="number" name="course" id="course" min="1" max="6" step="1" placeholder="Введите номер вашего курса" />
+                <div id="course-empty-error" class="error-message">Поле не должно быть пустым</div>
+            </div>
+            <div class="student-form">
+                <label for="hobby">Хобби</label>
+                <input type="text" name="hobby" id="hobby" list="hobby-list" placeholder="Выберите ваше хобби" />
+                <div id="hobby-empty-error" class="error-message">Поле не должно быть пустым</div>
+                <div id="hobby-list-error" class="error-message">Выберите значение из списка</div>
+                <datalist id="hobby-list">
+                    <option value="Спорт"></option>
+                    <option value="Рисование"></option>
+                    <option value="Музыка"></option>
+                    <option value="Другое"></option>
+                </datalist>
+                <div class="student-form" id="custom-hobby-container" style="display: none; margin-top: 15px">
+                    <label for="custom-hobby"></label>
+                    <input type="text" name="custom-hobby" id="custom-hobby" placeholder="Введите ваше хобби" />
+                </div>
+            </div>
+                <div class="button-content">
+                    <button type="button" id="submit-btn" onclick="openModal()">Отправить</button>
+                </div>
+            </form>
+    </div>
+    <script>
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Enter") {
+                const submitButton = document.getElementById("submit-btn");
+                submitButton.click();
+            }});
+    </script>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>Введённые данные:</h2>
+            <p><strong>ФИО:</strong> <span id="modal-name"></span></p>
+            <p><strong>Номер телефона:</strong> <span id="modal-phone"></span></p>
+            <p><strong>Институт:</strong> <span id="modal-institute"></span></p>
+            <p><strong>Курс:</strong> <span id="modal-course"></span></p>
+            <p><strong>Хобби:</strong> <span id="modal-hobby"></span></p>
+            <button class="close-btn" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+</body>
+</html>

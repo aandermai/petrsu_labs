@@ -1,0 +1,228 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("fonts/NauryzRedKeds.ttf");
+}
+
+@media (max-width: 480px) {
+    /* В header: Заголовок и изображение становятся вертикальными */
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+    img {
+        margin: 0;
+        width: 80px;
+        height: 80px;
+    }
+    .banner_text p {
+        display: none;
+    }
+
+    /* Уменьшаем размеры кнопок навигации и делаем их на всю ширину */
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+    nav button {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+    /* Меняем расположение блоков в main */
+    section {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .text-block {
+        flex: 1;
+        padding: 15px;
+    }
+    .inset {
+        flex: 1;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    footer a {
+        text-align: center;
+        display: block;
+    }
+}
+
+/* Медиазапросы для планшетов и небольших экранов (max-width: 768px) */
+@media (max-width: 768px) {
+    /* В header и nav адаптируем элементы */
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+    .banner_text p {
+        display: none;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+    nav button {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        font-size: 16px;
+    }
+
+    section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .text-block {
+        padding: 15px;
+    }
+
+    .inset {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    footer {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+}
+
+body {
+    background: linear-gradient(180deg, #4a3345, #5A4D7A, #8B5FBF, #D96B9A);
+    display: grid;
+}
+
+header {
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+    position: relative;
+    display: flex;
+}
+
+
+img {
+    float: left;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: 2px aliceblue solid;
+    box-shadow: 0 0 10px #5A4D7A;
+}
+
+.banner_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.banner_text p {
+    font-family: 'Roboto', "NauryzRedKeds", sans-serif;
+    color: aliceblue;
+    line-height: 5px;
+}
+
+nav {
+    display: flex;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+}
+
+nav button {
+    width:150px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #333333;
+    color: aliceblue;
+    border: 1px aliceblue solid;
+    font-family: "Roboto", "NauryzRedKeds", sans-serif;
+}
+
+nav button:hover {
+    background-color: #FF1493;
+    color: #333333;
+    cursor: pointer;
+  }
+
+
+.title {
+    font-family: 'Roboto', "NauryzRedKeds", sans-serif;
+    font-size: 25px;
+    float: left
+}
+
+main {
+    background-color: #333333;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+    font-family: "Montserrat";
+    display: grid;
+    gap: 20px
+}
+
+section {
+    display: flex;
+    gap: 20px
+}
+
+.main_block {
+    border: 2px aliceblue solid;
+}
+
+.text-block {
+    flex: 3; /* Задаём ширину основного текста (больше места) */
+    padding: 10px;
+}
+
+.inset {
+    border: 2px aliceblue solid;
+    flex: 1; 
+    background-color: #444444; 
+    color: aliceblue;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+    max-height:min-content;
+}
+
+main p {
+    margin-left: 10px;
+    color: aliceblue;
+}
+
+footer {
+    padding: 10px;
+    margin-top: 20px;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+    overflow: hidden;
+}
+
+footer p {
+    color: aliceblue;
+}
+
+footer a {
+    float: right;
+    text-decoration: none;
+    color: aliceblue;
+}

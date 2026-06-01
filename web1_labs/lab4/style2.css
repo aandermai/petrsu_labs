@@ -1,0 +1,298 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("fonts/NauryzRedKeds.ttf");
+}
+
+/* Для экранов меньше 1200px */
+@media (max-width: 1200px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .logo {
+        width: 90px;
+        height: 90px;
+    }
+
+    .banner_text p {
+        display: none;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    main {
+        grid-template-columns: 30% 70%;
+    }
+
+    aside {
+        padding: 15px;
+    }
+
+    article {
+        flex-direction: column;
+    }
+
+    footer a {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+}
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .film-poster {
+        width: 120px;
+        height: 160px;
+    }
+
+    .banner_text p {
+        display: none;
+    }
+
+    nav button {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    main {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    article {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    footer a {
+        font-size: 14px;
+    }
+}
+
+/* Для экранов меньше 480px (мобильные устройства с маленьким экраном) */
+@media (max-width: 480px) {
+    header {
+        padding: 5px;
+    }
+
+    .logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .banner_text p {
+        display: none;
+    }
+
+    nav button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .film-poster {
+        width: 100px;
+        height: 140px;
+    }
+
+    footer a {
+        font-size: 12px;
+    }
+}
+
+body {
+    background: linear-gradient(180deg, #4a3345, #5A4D7A, #8B5FBF, #D96B9A);
+    display: grid;
+}
+
+header {
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+    position: relative;
+    display: flex;
+}
+
+a {
+    text-decoration: none;
+    color: aliceblue;
+}
+
+p {
+    color: aliceblue;
+}
+
+
+.logo {
+    float: left;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: 2px aliceblue solid;
+    box-shadow: 0 0 10px #5A4D7A;
+}
+
+.film-poster {
+    margin: 10px;
+    width: 150px;
+    height: 200px;
+    border-radius: 10px;
+    border: 2px aliceblue solid;
+    flex-shrink: 0;
+}
+
+.banner_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.banner_text p {
+    font-family: 'Roboto', "NauryzRedKeds", sans-serif;
+    color: aliceblue;
+    line-height: 5px;
+}
+
+nav {
+    display: flex;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+}
+
+nav button {
+    width:150px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #333333;
+    color: aliceblue;
+    border: 1px aliceblue solid;
+    font-family: "Roboto", "NauryzRedKeds", sans-serif;
+}
+
+nav button:hover {
+    background-color: #FF1493;
+    color: #333333;
+    cursor: pointer;
+  }
+
+
+.title {
+    font-family: 'Roboto', "NauryzRedKeds", sans-serif;
+    font-size: 25px;
+    float: left
+}
+main {
+    background-color: #333333;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 20px;
+    font-family: "Montserrat";
+    display: grid;
+    grid-template-columns: 15% 84%;
+    gap: 20px;
+}
+
+main div {
+    background: linear-gradient(135deg, #333333, #5A4D7A);
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+main p {
+    margin-left: 10px;
+}
+
+aside {
+    font-family: "Roboto", "NauryzRedKeds", sans-serif; ;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    padding: 20px;
+    display: grid;
+    row-gap: 10px;
+    justify-content: center;
+}
+
+aside p {
+    line-height: 5px;
+}
+
+aside a {
+    display: grid;
+    justify-content: center;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    padding: 10px;
+    line-height: 50px;
+}
+
+aside a:hover {
+    background-color: #FF1493;
+    color: #333333;
+    cursor: pointer;
+}
+
+
+article {
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex; /* Элементы располагаются в строку */
+    gap: 20px; /* Расстояние между картинкой и текстом */
+    margin-bottom: 20px; /* Отступ между блоками фильмов */
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+}
+
+article div {
+    display: inline-flex;
+    margin: 20px;
+}
+
+.film-info {
+    display: flex;
+    flex-direction: column; /* Заголовок сверху, текст снизу */
+}
+
+
+
+.title p {
+    line-height: 5px;
+}
+
+
+footer {
+    padding: 10px;
+    margin-top: 20px;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+    overflow: hidden;
+}
+
+footer a {
+    float: right;
+}

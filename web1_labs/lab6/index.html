@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестовая Среда</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Тестирование</h1>
+    <form id="testForm">
+        <!-- Вопрос с одним выбором -->
+        <div class="question">
+            <h3>1. Какое написание названия нашего университета является верным?</h3>
+            <label><input type="radio" name="question_1" value="0"> ПГУ</label><br>
+            <label><input type="radio" name="question_1" value="1"> ПЕТРГУ</label><br>
+            <label><input type="radio" name="question_1" value="2"> ПетрГУ</label>
+        </div>
+
+        <!-- Вопрос с множественным выбором -->
+        <div class="question">
+            <h3>2. Какие зачёты остались у приклаников?</h3>
+            <label><input type="checkbox" name="question_2" value="0"> ООП<label><br>
+            <label><input type="checkbox" name="question_2" value="1"> Web-технологии</label><br>
+            <label><input type="checkbox" name="question_2" value="2"> Дискретная математика</label>
+        </div>
+
+        <!-- Вопрос с выпадающим списком -->
+        <div class="question">
+            <h3>3. Кто выиграл конкурс "Лучший Адаптер ИМИТ 2024"?</h3>
+            <select name="question_3">
+                <option value="0">Петрушин Артём</option>
+                <option value="1">Шолохова Ксения</option>
+                <option value="2">Прокофьев Игорь</option>
+            </select>
+        </div>
+
+        <!-- Вопрос на ввод текста -->
+        <div class="question">
+            <h3>4. Как зовут преподавателя по дисциплине "Web-технологии", который не является лектором?</h3>
+            <input type="text" name="question_4">
+        </div>
+
+        <!-- Вопрос на ввод числа -->
+        <div class="question">
+            <h3>5. Какое количество долгов вы предпочитаете за этот семестр?</h3>
+            <input type="number" name="question_5">
+        </div>
+
+        <!-- Вопрос на соответствие -->
+        <div class="question">
+            <h3>6. Соедините пару преподаватель-дисциплина:</h3>
+            <label>Рего Григорий Эйнович</label>
+            <select name="question_6_1">
+                <option value="1">Математический анализ</option>
+                <option value="2">ООП</option>
+                <option value="3">Введение в архитектуру ЭВМ</option>
+            </select><br>
+            <label>Платонов Сергей Сергеевич</label>
+            <select name="question_6_2">
+                <option value="1">Аналитическая геометрия</option>
+                <option value="2">Дискретная математика</option>
+                <option value="3">Иностранный язык</option>
+            </select><br>
+            <label>Чистяков Дмитрий Борисович</label>
+            <select name="question_6_3">
+                <option value="1">Линейная алгебра</option>
+                <option value="2">Математическая логика</option>
+                <option value="3">Web-технологии</option>
+            </select>
+        </div>
+
+        <button type="button" class="button" onclick="submitTest()">Отправить</button>
+    </form>
+    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9;"></div>
+    <script src="script.js"></script>
+</body>
+</html>

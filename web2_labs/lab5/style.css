@@ -1,0 +1,15 @@
+body {
+    position: relative;
+}
+
+input {
+    position: relative;
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.button {
+    height: 25px;
+    width: 170px;
+}

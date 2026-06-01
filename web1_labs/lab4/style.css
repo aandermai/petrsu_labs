@@ -1,0 +1,220 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("fonts/NauryzRedKeds.ttf");
+}
+
+@media (max-width: 1200px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .banner_text p {
+        display: none;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    main {
+        padding: 15px;
+    }
+
+    footer {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .text-from-block {
+        font-size: 14px;
+    }
+
+    header {
+        padding: 10px;
+    }
+
+    .banner_text p {
+        display: none;
+    }
+
+    nav button {
+        font-size: 14px;
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    footer a {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 5px;
+    }
+
+    img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .banner_text p {
+        display: none;
+    }
+
+    nav button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    main div {
+        padding: 8px;
+    }
+
+    footer a {
+        font-size: 14px;
+    }
+}
+
+body {
+    background: linear-gradient(180deg, #4a3345, #5A4D7A, #8B5FBF, #D96B9A);
+    display: grid;
+}
+
+header {
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+    position: relative;
+    display: flex;
+}
+
+
+img {
+    float: left;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: 2px aliceblue solid;
+    box-shadow: 0 0 10px #5A4D7A;
+}
+
+.banner_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.banner_text p {
+    font-family: 'Roboto', "NauryzRedKeds", sans-serif;
+    color: aliceblue;
+    line-height: 5px;
+}
+
+nav {
+    display: flex;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+}
+
+nav button {
+    width:150px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #333333;
+    color: aliceblue;
+    border: 1px aliceblue solid;
+    font-family: "Roboto", "NauryzRedKeds", sans-serif;
+}
+
+nav button:hover {
+    background-color: #FF1493;
+    color: #333333;
+    cursor: pointer;
+  }
+
+
+.title {
+    font-family: 'Roboto', "NauryzRedKeds", sans-serif;
+    font-size: 25px;
+    float: left
+}
+
+.text-from-block {
+    clear: left;
+    font-size: medium;
+}
+
+main {
+    background-color: #333333;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+    font-family: "Montserrat";
+}
+
+main div {
+    background: linear-gradient(135deg, #333333, #5A4D7A);
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+main p {
+    margin-left: 10px;
+    color: aliceblue;
+}
+
+footer {
+    padding: 10px;
+    margin-top: 20px;
+    border: 2px aliceblue solid;
+    border-radius: 10px;
+    background-color: #333333;
+    overflow: hidden;
+}
+
+footer p {
+    color: aliceblue;
+}
+
+footer a {
+    float: right;
+    text-decoration: none;
+    color: aliceblue;
+}
