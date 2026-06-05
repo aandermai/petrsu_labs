@@ -1,4 +1,6 @@
 library(readxl)
+library(randtests)
+options(warn = -1)
 
 # Чтение таблицы Excel
 my_data <- read_excel("./statistic_table_lab1.xlsx")
@@ -86,7 +88,7 @@ south_regions <- subset(my_data, my_data$`тип региона` == "ю")
 central_regions <- subset(my_data, my_data$`тип региона` == "ц")
 
 # Функция критерия однородности
-homogeneity_test <- function(first_selection, second_selection, column_name, alpha = 0.1) {
+homogeneity_test <- function(first_selection, second_selection, column_name, third_selection = NULL, alpha = 0.1) {
   # Критерий Колмогорова-Смирнова
   ks_test <- ks.test(first_selection[[column_name]], second_selection[[column_name]])
   
@@ -96,7 +98,25 @@ homogeneity_test <- function(first_selection, second_selection, column_name, alp
   # Критерий серий
   runs_test <- runs.test(c(first_selection[[column_name]], second_selection[[column_name]]))
   
-homogeneity_test(north_regions, south_regions, "Количество студентов (ВПО)")
+  
+  x <- first_selection[[column_name]]
+  y <- second_selection[[column_name]]
+  group_x <- rep("first", length(x))
+  group_y <- rep("second", length(y))
+  values <- c(x, y)
+  groups <- c(group_x, group_y)
+  # Краскела-Уоллиса
+  kruskal_test <- kruskal.test(values ~ groups)
+  
+  return(list(
+    ks_test = ks_test$p.value,
+    wilcox_test = wilcox_test$p.value,
+    runs_test = runs_test$p.value,
+    kruskal_test = kruskal_test$p.value
+    
+  ))
+  
+test2 <- homogeneity_test(north_regions, south_regions, "Количество студентов (ВПО)")
   
   
 }
