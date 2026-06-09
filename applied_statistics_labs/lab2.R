@@ -7,11 +7,13 @@ my_data <- read_excel("./statistic_table_lab1.xlsx")
 # Выбор трёх параметров
 x1 <- my_data$`Количество студентов (СПО)`
 x2 <- my_data$`Количество студентов (ВПО)`
-x3 <- my_data$`Уровень инновационного производства`
+x3 <- my_data$`ВРП`
 
 # Функция критерия согласия
 goodness_of_fit_test <- function(selection, param_name, alpha = 0.1) {
+  cat("============================\n")
   cat("ПАРАМЕТР:", param_name, "\n")
+  cat("============================\n")
   
   selection_mean <- mean(selection) # Мат. Ожидание
   selection_sd <- sd(selection) # Средн. отклонение
@@ -41,9 +43,9 @@ goodness_of_fit_test <- function(selection, param_name, alpha = 0.1) {
   cat("КРИТЕРИЙ ПИРСОНА\n")
 
   # Разбиваем данные на интервалы (число интервалов = корень из объёма выборки)
-  breaks_num <- round(sqrt(length(x)))
-  breaks <- hist(x, plot = FALSE, breaks = breaks_num)$breaks
-  observed <- hist(x, plot = FALSE, breaks = breaks)$counts   # частоты
+  breaks_num <- round(sqrt(length(selection)))
+  breaks <- hist(selection, plot = FALSE, breaks = breaks_num)$breaks
+  observed <- hist(selection, plot = FALSE, breaks = breaks)$counts   # частоты
   
   # Нормальное распределение
   p_norm <- diff(pnorm(breaks, selection_mean, selection_sd))      # теоретические вероятности
@@ -66,19 +68,19 @@ goodness_of_fit_test <- function(selection, param_name, alpha = 0.1) {
   par(mfrow = c(1, 3))
 
   # Нормальное
-  hist(x, probability = TRUE, main = paste(param_name, "\nНормальное"), col = "lightblue")
+  hist(selection, probability = TRUE, main = paste(param_name, "\nНормальное"), col = "lightblue")
   curve(dnorm(x, mean = selection_mean, sd = selection_sd), col = "red", lwd = 2, add = TRUE)
   # Показательное
-  hist(x, probability = TRUE, main = paste(param_name, "\nПоказательное"), col = "lightgreen")
+  hist(selection, probability = TRUE, main = paste(param_name, "\nПоказательное"), col = "lightgreen")
   curve(dexp(x, rate = lambda), col = "blue", lwd = 2, add = TRUE)
   # Равномерное
-  hist(x, probability = TRUE, main = paste(param_name, "\nРавномерное"), col = "lightpink")
+  hist(selection, probability = TRUE, main = paste(param_name, "\nРавномерное"), col = "lightpink")
   curve(dunif(x, min = a, max = b), col = "darkgreen", lwd = 2, add = TRUE)
 }
 
 goodness_of_fit_test(x1, "Количество студентов (СПО)")
 goodness_of_fit_test(x2, "Количество студентов (ВПО)")
-goodness_of_fit_test(x3, "Уровень инновационного производства")
+goodness_of_fit_test(x3, "ВРП")
 
 # --- Вспомогательная функция для критерия серий
 # Проверяет, случайно ли чередуются значения из двух выборок при сортировке
@@ -121,21 +123,21 @@ homogeneity_test <- function(first_selection, second_selection, column_name, alp
   
   # Критерий Колмогорова-Смирнова
   ks_test <- ks.test(x, y)
-  cat("Колмогоров-Смирнов: p =", ks$p.value,
-      ifelse(ks$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+  cat("Колмогоров-Смирнов: p =", ks_test$p.value,
+      ifelse(ks_test$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
   
   # Критерий Вилкоксона
   wilcox_test <- wilcox.test(x, y)
-  cat("Вилкоксон: p =", wil$p.value,
-      ifelse(wil$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+  cat("Вилкоксон: p =", wilcox_test$p.value,
+      ifelse(wilcox_test$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
   
   # Критерий серий
-  runs_test <- runs_test(x, y)
+  runs_p <- runs_test(x, y)
   cat("Критерий серий: p =", runs_p,
       ifelse(runs_p < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
 
   # Медианный критерий
-  median_test <- median_test(x, y)
+  med_p <- median_test(x, y)
   cat("Медианный критерий: p =", med_p,
       ifelse(med_p < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
 
