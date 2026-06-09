@@ -147,9 +147,16 @@ homogeneity_test <- function(first_selection, second_selection, column_name, alp
       ifelse(kruskal_test$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
 
     # График
-  boxplot(x, y, names = c("Север", "Юг"),
-          main = p$name, ylab = p$name, col = c("lightblue", "lightgreen"))
+  boxplot(x, y,
+          names = c("Север", "Юг"),
+          main = column_name,
+          ylab = column_name,
+          col = c("lightblue", "lightgreen"))
 }
+
+homogeneity_test(north, south, "Количество студентов (СПО)")
+homogeneity_test(north, south, "Количество студентов (ВПО)")
+homogeneity_test(north, south, "ВРП")
 
 x <- north$`Количество студентов (СПО)`
 y <- south$`Количество студентов (СПО)`
