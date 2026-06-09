@@ -1,17 +1,18 @@
 library(readxl)
-library(randtests)
 options(warn = -1)
 
 # Чтение таблицы Excel
 my_data <- read_excel("./statistic_table_lab1.xlsx")
 
 # Выбор трёх параметров
-spo_students_count <- my_data$`Количество студентов (СПО)`
-vpo_students_count <- my_data$`Количество студентов (ВПО)`
-innovation_level <- my_data$`Уровень инновационного производства`
+x1 <- my_data$`Количество студентов (СПО)`
+x2 <- my_data$`Количество студентов (ВПО)`
+x3 <- my_data$`Уровень инновационного производства`
 
 # Функция критерия согласия
-goodness_of_fit_test <- function(selection) {
+goodness_of_fit_test <- function(selection, param_name, alpha = 0.1) {
+  cat("ПАРАМЕТР:", param_name, "\n")
+  
   selection_mean <- mean(selection) # Мат. Ожидание
   selection_sd <- sd(selection) # Средн. отклонение
   lambda <- 1 / selection_mean # Интенсивность 
@@ -19,104 +20,158 @@ goodness_of_fit_test <- function(selection) {
   b <- max(selection) # Верхняя граница
   
   # Критерий Колмогорова-Смирнова
-  ks_norm <- ks.test(selection, "pnorm", selection_mean, selection_sd)
-  ks_exp <- ks.test(selection, "pexp", lambda)
-  ks_unif <- ks.test(selection, "punif", a, b)
-
-  # Критерий Пирсона
-  histogram <-  hist(selection, plot = FALSE)
-  observed <- histogram$counts # Что получилось
-  breaks <- histogram$breaks # Границы интервалов
+  cat("КРИТЕРИЙ КОЛМОГОРОВА-СМИРНОВА\n")
   
   # Нормальное распределение
-  expected_prob <- diff(pnorm(breaks, selection_mean, selection_sd))
-  expected_prob <- expected_prob / sum(expected_prob)
-  pirson_norm <- chisq.test(observed, p = expected_prob)
+  ks_norm <- ks.test(selection, "pnorm", selection_mean, selection_sd)
+  cat("\nНормальное распределение:\n"); print(ks_norm)
+  cat(ifelse(ks_norm$p.value > alpha, "-> не отвергаем", "-> отвергаем"), "\n")
 
-  # Показательное распределение  
-  expected_prob <- diff(pexp(breaks, rate = lambda))
-  expected_prob <- expected_prob / sum(expected_prob)
-  pirson_exp <- chisq.test(observed, p = expected_prob)
+  # Показательное распределение
+  ks_exp <- ks.test(selection, "pexp", lambda)
+  cat("\nПоказательное распределение:\n"); print(ks_exp)
+  cat(ifelse(ks_exp$p.value > alpha, "-> не отвергаем", "-> отвергаем"), "\n")
+
+  # Равномерное распределение 
+  ks_unif <- ks.test(selection, "punif", a, b)
+  cat("\nРавномерное распределение:\n"); print(ks_unif)
+  cat(ifelse(ks_unif$p.value > alpha, "-> не отвергаем", "-> отвергаем"), "\n")
+  
+  # Критерий Пирсона
+  cat("КРИТЕРИЙ ПИРСОНА\n")
+
+  # Разбиваем данные на интервалы (число интервалов = корень из объёма выборки)
+  breaks_num <- round(sqrt(length(x)))
+  breaks <- hist(x, plot = FALSE, breaks = breaks_num)$breaks
+  observed <- hist(x, plot = FALSE, breaks = breaks)$counts   # частоты
+  
+  # Нормальное распределение
+  p_norm <- diff(pnorm(breaks, selection_mean, selection_sd))      # теоретические вероятности
+  chisq_norm <- chisq.test(observed, p = p_norm, rescale.p = TRUE)
+  cat("\nНормальное распределение:\n"); print(chisq_norm)
+  cat(ifelse(chisq_norm$p.value > alpha, "-> не отвергаем", "-> отвергаем"), "\n")
+  
+  # Показательное распределение
+  p_exp <- diff(pexp(breaks, lambda))
+  chisq_exp <- chisq.test(observed, p = p_exp, rescale.p = TRUE)
+  cat("\nПоказательное распределение:\n"); print(chisq_exp)
+  cat(ifelse(chisq_exp$p.value > alpha, "-> не отвергаем", "-> отвергаем"), "\n")
   
   # Равномерное распределение
-  expected_prob <- diff(punif(breaks, a, b))
-  expected_prob <- expected_prob / sum(expected_prob)
-  pirson_unif <- chisq.test(observed, p = expected_prob)
+  p_unif <- diff(punif(breaks, a, b))
+  chisq_unif <- chisq.test(observed, p = p_unif, rescale.p = TRUE)
+  cat("\nРавномерное распределение:\n"); print(chisq_unif)
+  cat(ifelse(chisq_unif$p.value > alpha, "-> не отвергаем", "-> отвергаем"), "\n")
   
   par(mfrow = c(1, 3))
 
-  hist(selection, probability = TRUE, main = "Normal")
-  curve(dnorm(x, mean(selection), sd(selection)), add = TRUE)
-  
-  hist(selection, probability = TRUE, main = "Exponential")
-  curve(dexp(x, rate = 1/mean(selection)), add = TRUE)
-  
-  hist(selection, probability = TRUE, main = "Uniform")
-  curve(dunif(x, min(selection), max(selection)), add = TRUE)
-  
-  return(list(
-    ks_norm = ks_norm$p.value,
-    ks_exp = ks_exp$p.value,
-    ks_unif = ks_unif$p.value,
-    pirson_norm = pirson_norm$p.value,
-    pirson_exp = pirson_exp$p.value,
-    pirson_unif = pirson_unif$p.value
-  ))
+  # Нормальное
+  hist(x, probability = TRUE, main = paste(param_name, "\nНормальное"), col = "lightblue")
+  curve(dnorm(x, mean = selection_mean, sd = selection_sd), col = "red", lwd = 2, add = TRUE)
+  # Показательное
+  hist(x, probability = TRUE, main = paste(param_name, "\nПоказательное"), col = "lightgreen")
+  curve(dexp(x, rate = lambda), col = "blue", lwd = 2, add = TRUE)
+  # Равномерное
+  hist(x, probability = TRUE, main = paste(param_name, "\nРавномерное"), col = "lightpink")
+  curve(dunif(x, min = a, max = b), col = "darkgreen", lwd = 2, add = TRUE)
 }
 
-# Функция для проверки p-value с уровнем значимости
-decision <- function(p_value, alpha = 0.1) {
-  ifelse(p_value > alpha,
-         "Не отвергается",
-         "Отвергается")
+goodness_of_fit_test(x1, "Количество студентов (СПО)")
+goodness_of_fit_test(x2, "Количество студентов (ВПО)")
+goodness_of_fit_test(x3, "Уровень инновационного производства")
+
+# --- Вспомогательная функция для критерия серий
+# Проверяет, случайно ли чередуются значения из двух выборок при сортировке
+runs_test <- function(x, y) {
+  combined <- c(x, y)                          # объединяем выборки
+  labels <- c(rep(0, length(x)), rep(1, length(y))) # метки: 0 – север, 1 – юг
+  ord <- order(combined)                       # сортируем значения по возрастанию
+  sorted_labels <- labels[ord]                 # метки в порядке сортировки
+  runs <- 1                                    # начинаем с первой серии
+  for (i in 2:length(sorted_labels)) {
+    if (sorted_labels[i] != sorted_labels[i-1]) runs <- runs + 1
+  }
+  n1 <- length(x); n2 <- length(y)
+  exp_runs <- 2*n1*n2/(n1+n2) + 1              # ожидаемое число серий
+  var_runs <- (2*n1*n2*(2*n1*n2 - n1 - n2)) / ((n1+n2)^2 * (n1+n2 - 1))
+  z <- (runs - exp_runs) / sqrt(var_runs)
+  p_value <- 2 * pnorm(-abs(z))                # двусторонний p-value
+  return(p_value)
 }
 
-# Проверка критерия согласия на параметрах
-spo_test <- goodness_of_fit_test(spo_students_count)
-vpo_test <- goodness_of_fit_test(vpo_students_count)
-innovation_test <- goodness_of_fit_test(innovation_level)
-cat("=== СТУДЕНТЫ СПО ===\n")
-print(sapply(spo_test, decision))
-cat("=== СТУДЕНТЫ ВПО ===\n")
-print(sapply(vpo_test, decision))
-cat("=== УРОВЕНЬ ИННОВАЦИИ ===\n")
-print(sapply(innovation_test, decision))
+# Медианный критерий для двух групп
+# Проверяет, различаются ли доли наблюдений выше и ниже общей медианы
+median_test <- function(x, y) {
+  med <- median(c(x, y))                       # общая медиана
+  # Таблица 2×2: [выше медианы, ниже/равно медианы] для каждой группы
+  tab <- matrix(c(sum(x > med), sum(x <= med),
+                  sum(y > med), sum(y <= med)), nrow = 2, byrow = TRUE)
+  chisq.test(tab, correct = FALSE)$p.value     # p-value хи-квадрат
+}
 
 # Пункт 2
-north_regions <- subset(my_data, my_data$`тип региона` == "с")
-south_regions <- subset(my_data, my_data$`тип региона` == "ю")
-central_regions <- subset(my_data, my_data$`тип региона` == "ц")
+north <- subset(my_data, my_data$`тип региона` == "с")
+south <- subset(my_data, my_data$`тип региона` == "ю")
+center <- subset(my_data, my_data$`тип региона` == "ц")
 
-# Функция критерия однородности
-homogeneity_test <- function(first_selection, second_selection, column_name, third_selection = NULL, alpha = 0.1) {
-  # Критерий Колмогорова-Смирнова
-  ks_test <- ks.test(first_selection[[column_name]], second_selection[[column_name]])
-  
-  # Критерий Вилкоксона
-  wilcox_test <- wilcox.test(first_selection[[column_name]], second_selection[[column_name]])
-  
-  # Критерий серий
-  runs_test <- runs.test(c(first_selection[[column_name]], second_selection[[column_name]]))
-  
-  
+# Функция критерия однородности для двух групп
+homogeneity_test <- function(first_selection, second_selection, column_name, alpha = 0.1) {
   x <- first_selection[[column_name]]
   y <- second_selection[[column_name]]
-  group_x <- rep("first", length(x))
-  group_y <- rep("second", length(y))
-  values <- c(x, y)
-  groups <- c(group_x, group_y)
-  # Краскела-Уоллиса
-  kruskal_test <- kruskal.test(values ~ groups)
   
-  return(list(
-    ks_test = ks_test$p.value,
-    wilcox_test = wilcox_test$p.value,
-    runs_test = runs_test$p.value,
-    kruskal_test = kruskal_test$p.value
-    
-  ))
+  # Критерий Колмогорова-Смирнова
+  ks_test <- ks.test(x, y)
+  cat("Колмогоров-Смирнов: p =", ks$p.value,
+      ifelse(ks$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
   
-test2 <- homogeneity_test(north_regions, south_regions, "Количество студентов (ВПО)")
+  # Критерий Вилкоксона
+  wilcox_test <- wilcox.test(x, y)
+  cat("Вилкоксон: p =", wil$p.value,
+      ifelse(wil$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
   
-  
+  # Критерий серий
+  runs_test <- runs_test(x, y)
+  cat("Критерий серий: p =", runs_p,
+      ifelse(runs_p < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+
+  # Медианный критерий
+  median_test <- median_test(x, y)
+  cat("Медианный критерий: p =", med_p,
+      ifelse(med_p < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+
+    # 5. Краскела-Уоллиса –-- для двух групп
+  kruskal_test <- kruskal.test(list(x, y))
+  cat("Краскела-Уоллиса: p =", kruskal_test$p.value,
+      ifelse(kruskal_test$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+
+    # График
+  boxplot(x, y, names = c("Север", "Юг"),
+          main = p$name, ylab = p$name, col = c("lightblue", "lightgreen"))
 }
+
+x <- north$`Количество студентов (СПО)`
+y <- south$`Количество студентов (СПО)`
+z <- center$`Количество студентов (СПО)`
+
+cat("\n========== Три группы (Валовой региональный продукт) ==========\n")
+alpha = 0.1
+
+# 1. Краскела-Уоллиса
+kw3 <- kruskal.test(list(x, y, z))
+cat("Краскела-Уоллиса: p =", kw3$p.value,
+    ifelse(kw3$p.value < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+
+# 2. Медианный критерий для трёх групп
+med_all <- median(c(x, y, z))                # общая медиана
+# Таблица 3×2: выше/ниже медианы для каждой группы
+tab <- matrix(c(sum(x > med_all), sum(x <= med_all),
+                sum(y > med_all), sum(y <= med_all),
+                sum(z > med_all), sum(z <= med_all)), nrow = 3, byrow = TRUE)
+med_p3 <- chisq.test(tab, correct = FALSE)$p.value
+cat("Медианный критерий: p =", med_p3,
+    ifelse(med_p3 < alpha, "-> отвергаем", "-> не отвергаем"), "\n")
+
+# График
+boxplot(x, y, z, names = c("Север", "Юг", "Центр"),
+        main = "Валовой региональный продукт", ylab = "млн руб.",
+        col = c("lightblue", "lightgreen", "lightyellow"))
