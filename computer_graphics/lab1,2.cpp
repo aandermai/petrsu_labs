@@ -1,4 +1,4 @@
-#include "GLUT/include/GL/glut.h")
+#include "GLUT/include/GL/glut.h"
 
 // Объявляем переменные для хранения углов вращения
 double rotate_x = 0;

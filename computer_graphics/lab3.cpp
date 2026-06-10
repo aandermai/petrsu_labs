@@ -1,4 +1,4 @@
-#include "GLUT/include/GL/glut.h")
+#include "GLUT/include/GL/glut.h"
 #include "math.h"
 
 double rotate_x = 0;

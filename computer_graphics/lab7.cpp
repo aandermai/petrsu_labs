@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "GLUT/include/GL/glut.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "C:\Users\Артём\Desktop\Компьютерная графика\stb_image.h"
+#include "./stb_image.h"
 #include <cstdlib>
 #include <cmath>
 
@@ -31,11 +31,11 @@ GLuint loadTexture(const char* filename) {
 
 // Загрузка текстур
 void initTextures() {
-    grassTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/floor.jpg");
-    wallsTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/wall.jpg");
-    backTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/backwall.jpg");
-    ballTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/ball.png");
-    wallTexture = loadTexture("C:/Users/Артём/Desktop/Компьютерная графика/images/ceiling.jpg");
+    grassTexture = loadTexture("./images/floor.jpg");
+    wallsTexture = loadTexture("./images/wall.jpg");
+    backTexture = loadTexture("./images/backwall.jpg");
+    ballTexture = loadTexture("./images/ball.png");
+    wallTexture = loadTexture("./images/ceiling.jpg");
 }
 
 // Отрисовка пола

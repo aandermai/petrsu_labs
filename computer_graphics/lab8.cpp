@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "GLUT/include/GL/glut.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "C:\\Users\\Артём\\Desktop\\Компьютерная графика\\stb_image.h"
+#include "./stb_image.h"
 #include <math.h>
 
 // Структуры для углов стрелок
@@ -41,8 +41,8 @@ GLuint loadTexture(const char* filename) {
 }
 
 void initTextures() {
-    clockTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\clock.png");
-    backgroundTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\wall.jpg");
+    clockTexture = loadTexture("./images/clock.png");
+    backgroundTexture = loadTexture("./images/wall.jpg");
 }
 
 void drawBackground() {

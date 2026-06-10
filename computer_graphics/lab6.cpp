@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "GLUT/include/GL/glut.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "C:\Users\Артём\Desktop\Компьютерная графика\stb_image.h"
+#include "./stb_image.h"
 #include <cstdlib>
 #include <math.h>
 
@@ -32,9 +32,9 @@ GLuint loadTexture(const char* filename) {
 }
 
 void initTextures() {
-    topTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\top_1.png");
-    bottomTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\bottom_1.png");
-    flankTexture = loadTexture("C:\\Users\\Артём\\Desktop\\Компьютерная графика\\images\\flank_1.jpg");
+    topTexture = loadTexture("./images/top_1.png");
+    bottomTexture = loadTexture("./images/bottom_1.png");
+    flankTexture = loadTexture("./images/flank_1.jpg");
 }
 
 void drawCanFlank(float radius, float height) {
