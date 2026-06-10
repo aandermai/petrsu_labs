@@ -12,7 +12,7 @@ BEGIN
         AND tv.intTreatmentVisitId != i.intTreatmentVisitId
     )
     BEGIN
-        RAISERROR('У пациента уже есть процедура на этот день', 16, 1)
+        RAISERROR('РћС€РёР±РєР°', 16, 1)
         ROLLBACK TRANSACTION
     END
 END
