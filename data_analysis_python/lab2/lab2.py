@@ -68,7 +68,7 @@ ax1.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 
 # Второй график
 ax2 = fig.add_subplot(2, 1, 2)
-ax2.plot(one_hour_interval, one_hour_volume,label= "A00000000002")
+ax2.plot(one_hour_interval, one_hour_volume, label="A00000000002")
 ax2.set_title("График2. Volume по 10-мин")
 ax2.set_xlabel("Номер 10-минутки")
 ax2.set_ylabel("Volume")
