@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import re
 
 line_pattern = re.compile(r".*\bA00000000002 <--->.*?\bKEEP")
@@ -10,67 +11,73 @@ volume_list = []
 time_list = []
 
 # Поиск строк, соответствующих шаблону
-with open("n_log2.txt") as file:
+with open("./n_log2.txt") as file:
     for line in file:
         if line_pattern.search(line):
             time_match = time_pattern.search(line)
             volume_match = volume_pattern.search(line)
             
             if time_match and volume_match:
-                time_list.append(time_match.group(1))
+                time_list.append(datetime.strptime(time_match.group(1), "%H:%M:%S"))
                 volume_list.append(int(volume_match.group(1)))
 
-# Преобразование времени в объекты datetime
-time_datetime = [datetime.strptime(t, "%H:%M:%S") for t in time_list]
 start_time = datetime.strptime("15:00:00", "%H:%M:%S")
 end_time = datetime.strptime("16:00:00", "%H:%M:%S")
 step = timedelta(minutes=10)
 
-# 1) Данные за первый 10-минутный интервал
-first_interval_end = start_time + step
-first_interval_data = {}
-for t, v in zip(time_datetime, volume_list):
-    if start_time <= t < first_interval_end:
-        first_interval_data[t.strftime("%H:%M:%S")] = v
+# Интервал первые 10 минут
+ten_mins_interval = []
+ten_mins_volume = []
 
-# 2) Разбиение на 10-минутные интервалы и вычисление средних
-intervals = []
-interval_means = []
-current = start_time
+for time, volume in zip(time_list, volume_list):
+    if start_time <= time < start_time + step:
+        ten_mins_interval.append(time)
+        ten_mins_volume.append(volume)
 
-while current < end_time:
-    next_time = current + step
-    interval_volumes = []
-    
-    for t, v in zip(time_datetime, volume_list):
-        if current <= t < next_time:
-            interval_volumes.append(v)
-    
-    if interval_volumes:  # если есть данные в интервале
-        intervals.append(f"{current.strftime('%H:%M')}-{next_time.strftime('%H:%M')}")
-        interval_means.append(sum(interval_volumes) / len(interval_volumes))
-    
-    current = next_time
+# Интервал часа по 10 минут
+one_hour_interval = []
+one_hour_volume = []
 
-# Создание графиков
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+for i in range(6):
+    interval_start = start_time + i * step
+    interval_end = interval_start + step
 
-# Первый график - данные за первый 10-минутный интервал
-ax1.plot(list(first_interval_data.keys()), list(first_interval_data.values()), label='A00000000002')
-ax1.set_xlabel('Время')
-ax1.set_ylabel('Volume')
+    volumes = []
+
+    for time, volume in zip(time_list, volume_list):
+        if interval_start <= time < interval_end:
+            volumes.append(volume)
+
+    average_volume = sum(volumes) / len(volumes)
+
+    one_hour_interval.append(i)
+    one_hour_volume.append(average_volume)
+
+fig = plt.figure(figsize=(12,5))
+plt.subplots_adjust(hspace=0.5)
+
+# Первый график
+ax1 = fig.add_subplot(2, 1, 1)
+ax1.plot(ten_mins_interval, ten_mins_volume, label="A00000000002")
+ax1.set_title("График1. Volume")
+ax1.set_xlabel("Время")
+ax1.set_ylabel("Volume")
 ax1.legend()
-ax1.tick_params(axis='x', rotation=45)
+ax1.xaxis.set_major_locator(mdates.MinuteLocator())
+ax1.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
 
-# Второй график - средние значения по 10-минутным интервалам
-ax2.plot(range(1, len(interval_means) + 1), interval_means, 
-         'ro-', label='A00000000002')
-ax2.set_xlabel('Номер временного отрезка (10 минут)')
-ax2.set_ylabel('Среднее значение volume')
-ax2.set_title('Средние значения volume по 10-минутным интервалам')
+# Второй график
+ax2 = fig.add_subplot(2, 1, 2)
+ax2.plot(one_hour_interval, one_hour_volume,label= "A00000000002")
+ax2.set_title("График2. Volume по 10-мин")
+ax2.set_xlabel("Номер 10-минутки")
+ax2.set_ylabel("Volume")
 ax2.legend()
-ax2.set_xticks(range(1, len(interval_means) + 1))
 
-plt.tight_layout()
 plt.show()
+
+
+
+
+
 
