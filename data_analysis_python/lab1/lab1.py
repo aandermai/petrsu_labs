@@ -69,6 +69,7 @@ def function(string):
     matches = re.findall(pattern, string)
 
     return len(matches)
+
 ###########################################
 # ЗАДАНИЕ 5
 ###########################################
@@ -80,6 +81,7 @@ def function(string):
     matches = re.findall(pattern, string)
 
     return len(matches)
+
 ###########################################
 # ЗАДАНИЕ 6
 ###########################################
@@ -95,7 +97,6 @@ def function(string):
             counter += 1
 
     return counter
-      
 
 ###########################################
 # ЗАДАНИЕ 7
