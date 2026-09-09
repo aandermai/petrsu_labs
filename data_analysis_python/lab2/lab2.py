@@ -3,23 +3,17 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import re
 
-line_pattern = re.compile(r".*\bA00000000002 <--->.*?\bKEEP")
-volume_pattern = re.compile(r"\bvolume=(\d+)")
-time_pattern = re.compile(r"(^15:\d{2}:\d{2})")
-
+line_pattern = re.compile(r"(^15:\d{2}:\d{2}).*\bA00000000002 <--->.*\bKEEP.*\bvolume=(\d+)")
 volume_list = []
 time_list = []
 
 # Поиск строк, соответствующих шаблону
 with open("./n_log2.txt") as file:
     for line in file:
-        if line_pattern.search(line):
-            time_match = time_pattern.search(line)
-            volume_match = volume_pattern.search(line)
-            
-            if time_match and volume_match:
-                time_list.append(datetime.strptime(time_match.group(1), "%H:%M:%S"))
-                volume_list.append(int(volume_match.group(1)))
+        line_match = line_pattern.search(line)
+        if line_match:
+            time_list.append(datetime.strptime(line_match.group(1), "%H:%M:%S"))
+            volume_list.append(int(line_match.group(2)))
 
 start_time = datetime.strptime("15:00:00", "%H:%M:%S")
 end_time = datetime.strptime("16:00:00", "%H:%M:%S")
@@ -75,9 +69,3 @@ ax2.set_ylabel("Volume")
 ax2.legend()
 
 plt.show()
-
-
-
-
-
-
