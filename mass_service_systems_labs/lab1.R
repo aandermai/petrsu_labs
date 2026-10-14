@@ -33,8 +33,6 @@ hist(x[1:100], breaks = 15, probability = TRUE,
 curve(dexp(x, rate = lambda),
       add = TRUE, col = "red", lwd = 2)
 
-
-
 ###########################
 # НОРМАЛЬНОЕ РАСПРЕДЕЛЕНИЕ
 ###########################
@@ -49,7 +47,6 @@ hist(x, breaks = 40, probability = TRUE,
 curve(dnorm(x, mean = mu, sd = sd),
       add = TRUE, col = "red", lwd = 2)
 
-
 # Выборка 1000
 hist(x[1:1000], breaks = 30, probability = TRUE,
      main = "Выборка 1000",
@@ -58,7 +55,6 @@ hist(x[1:1000], breaks = 30, probability = TRUE,
 
 curve(dnorm(x, mean = mu, sd = sd),
       add = TRUE, col = "red", lwd = 2)
-
 
 # Выборка 100
 hist(x[1:100], breaks = 15, probability = TRUE,
@@ -107,22 +103,14 @@ legend("topright",
 ###########################
 # ЦЕНТРАЛЬНАЯ ПРЕДЕЛЬНАЯ ТЕОРЕМА
 ###########################
-# 1. Параметры задания
-n <- 1            # Подставь свой номер варианта!
-mu <- n + 2       # Параметр среднего (n + 2)
-s <- 4            # Произвольная дисперсия s > 0
-sd_val <- sqrt(s) # Среднеквадратичное отклонение sigma
-N <- 10000        # Объём выборки (10 000 с.ч.)
-
-# 2. Генерация 10 000 нормальных случайных чисел по ЦПТ
 # Создаём матрицу 10000 x 12 из равномерных чисел U(0, 1)
-u_matrix <- matrix(runif(N * 12), nrow = N, ncol = 12)
+u_matrix <- matrix(runif(10000 * 12), nrow = 10000, ncol = 12)
 
 # Суммируем по строкам и центрируем (Z ~ N(0, 1))
 z_clt <- rowSums(u_matrix) - 6
 
 # Масштабируем и сдвигаем к заданному среднему mu и дисперсии s
-x_clt <- mu + sd_val * z_clt
+x_clt <- mu + sd * z_clt
 
 # 3. Построение гистограммы частот
 hist_info <- hist(x_clt, 
@@ -137,38 +125,34 @@ hist_info <- hist(x_clt,
 # Наложение теоретической кривой частот
 x_seq <- seq(min(x_clt), max(x_clt), length.out = 200)
 bin_width <- diff(hist_info$mids[1:2])
-y_theory_freq <- dnorm(x_seq, mean = mu, sd = sd_val) * N * bin_width
+y_theory_freq <- dnorm(x_seq, mean = mu, sd = sd) * 10000 * bin_width
 lines(x_seq, y_theory_freq, col = "darkgreen", lwd = 2)
 
 # 4. Тест Колмогорова-Смирнова
-ks_result <- ks.test(x_clt, "pnorm", mean = mu, sd = sd_val)
+ks_result <- ks.test(x_clt, "pnorm", mean = mu, sd = sd)
 print(ks_result)
 
 ###########################
 # РАСПРЕДЕЛЕНИЕ ПАРЕТО
 ###########################
-# 1. Параметры по условию
-n <- 1          # Подставь свой номер варианта!
-x0 <- 2         # Коэффициент масштаба
-alpha <- n + 5  # Параметр Парето
-N <- 10000      # Объём выборки
+x0 <- 2 # Коэффициент масштаба
+alpha <- variant_number + 5  # Параметр Парето
 
-# 2. Генерация методом обратной функции
-u <- runif(N)
+# Генерация методом обратной функции
+u <- runif(10000)
 x_pareto <- x0 / ((1 - u)^(1 / alpha))
 
-# 3. Функция теоретической плотности
+# Функция теоретической плотности
 f_theory <- function(x) {
   ifelse(x >= x0, (alpha * (x0^alpha)) / (x^(alpha + 1)), 0)
 }
 
-# 4. Визуализация и сравнение
-# Из-за длинного "хвоста" ограничим график 99-м перцентилем для наглядности
+# Графики
 xlim_max <- quantile(x_pareto, 0.99)
 
 hist(x_pareto, breaks = 100, probability = TRUE,
      xlim = c(x0, xlim_max),
-     main = paste0("Распределение Парето (n = ", n, ", alpha = ", alpha, ")"),
+     main = paste0("Распределение Парето"),
      xlab = "x", ylab = "Плотность",
      col = "lightblue", border = "white")
 
